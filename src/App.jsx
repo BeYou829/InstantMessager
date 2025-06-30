@@ -1,34 +1,43 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { SendHorizonal } from 'lucide-react'
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const [messages, setMessages] = useState([]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const formData = new FormData(e.target)
+
+    const name = formData.get("name")
+    const message = formData.get("message")
+
+
+    setMessages(prevState =>
+      [...prevState, { user: name, message }]
+    )
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <main className='flex gap-12'>
+      <div className="w-90 h-max p-4 bg-gray-400 rounded">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <label htmlFor="name">Nombre</label>
+          <input type="text" id='name' name='name' className='outline-1 rounded bg-white text-black px-4' />
+          <label htmlFor="message">Mensaje</label>
+          <input type="text" id='message' name='message' className='outline-1 rounded bg-white text-black px-4' />
+          <button type="submit" className='flex items-center justify-center gap-2'>
+            Enviar
+            <SendHorizonal />
+          </button>
+        </form>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+      <div className="w-90 h-max p-4 bg-gray-400 rounded">
+        <h2>Chat</h2>
+        {messages && messages.map((m, index) => <p key={index}><b>{m.user}:</b> | {m.message}</p>)}
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </main>
   )
 }
 
